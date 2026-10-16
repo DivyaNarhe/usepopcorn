@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import StarRating from "./StarRating"
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -50,6 +50,16 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+function Test(){
+  const [ movieRating, setMovieRating ] = useState(0);
+  return(
+    <div>
+      <StarRating color="white" maxRating={10} size="20" onSetRating={setMovieRating}/>
+      <p>This movie was rated {movieRating} stars</p>
+    </div>
+
+  );
+}
 
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
@@ -68,6 +78,9 @@ export default function App() {
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMovieList watched={watched} />
+          <StarRating maxRating={5} messages={["Terruable", "Bad", "Okay", "Good", "Amazing"]}/>
+          <StarRating maxRating={10} color="red" size="24"/>
+          <Test />
         </Box>
       </Main>
     </>
