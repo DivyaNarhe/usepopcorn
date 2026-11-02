@@ -64,19 +64,18 @@ function Test() {
 const KEY = "217c82e1";
 
 export default function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("inception");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isloading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const tempQuery = "interstellar";
 
   useEffect(() => {
     async function fetchMovies() {
       try {
         setIsLoading(true)
         setError('')
-        const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${tempQuery}`);
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${KEY}&s=${query}`);
 
         if (!res.ok) throw new Error("Something went wrong with fetching movies.");
 
@@ -85,15 +84,21 @@ export default function App() {
         if (data.Response === "False") {
           throw new Error(data.Error || "Movies not found.");
         }
-        setMovies(data.Search);
+        setMovies(data.Search || []);
         // console.log(movies); // still logs initial value of the movies that is mention in useState(_)
       }
       catch (err) {
         console.error(err.message);
         setError(err.message);
+        setMovies([]);
       } finally {
         setIsLoading(false);
       }
+    }
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
     }
     fetchMovies();
   }, [query])
@@ -115,9 +120,10 @@ export default function App() {
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMovieList watched={watched} />
-          <StarRating maxRating={5} messages={["Terruable", "Bad", "Okay", "Good", "Amazing"]} />
+          
+          {/* {<StarRating maxRating={5} messages={["Terruable", "Bad", "Okay", "Good", "Amazing"]} />
           <StarRating maxRating={10} color="red" size="24" />
-          <Test />
+          <Test />} */}
         </Box>
       </Main>
     </>
